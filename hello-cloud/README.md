@@ -3,5 +3,4 @@ Simple Groovy Hadoop Web app
 
 Run using:
 
-    spring run App.groovy
-
+    spring run com/springdeveloper/demo/HdfsApp.groovy
