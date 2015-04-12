@@ -1,4 +1,4 @@
-Simple Groovy Hadoop Web app
+Simple Groovy Hadoop Web App
 ============================
 
 Run using:
