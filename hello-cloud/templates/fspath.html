@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Spring for Apache Hadoop - Boot Demo</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <script src="webjars/jquery/2.0.3/jquery.min.js"></script>
+</head>
+<body>
+  <p th:text="'HDFS content for ' + ${name} + ':'" />
+
+  <ul th:each="dir : ${dirs}">
+    <li><a th:href="@{/fspath(name=${base} + '/' + ${dir})}" th:text="${dir}"></a></li>
+  </ul>
+  <ul th:each="file : ${files}">
+    <li th:text="${file}" />
+  </ul>
+
+</body>
+</html>

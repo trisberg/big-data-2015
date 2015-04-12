@@ -1,0 +1,6 @@
+spring:
+  main:
+    show_banner: true
+  hadoop:
+    fsUri: hdfs://borneo:8020
+
