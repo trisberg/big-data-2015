@@ -13,7 +13,7 @@ Run using:
 
 
 
-Build Docker image (yoy need a Docker Hub account):
+Build Docker image (you need a Docker Hub account):
 
     docker build -t hello-cloud .
     docker tag -f hello-cloud $USER/hello-cloud
