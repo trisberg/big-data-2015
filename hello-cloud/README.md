@@ -1,5 +1,5 @@
-Simple Groovy Hadoop Web App
-============================
+Simple Hadoop Web App
+=====================
 
 
 Build using:
