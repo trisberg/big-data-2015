@@ -1,36 +1,30 @@
-xd-batch-workflow
-=================
+batch-workflow
+==============
 
 Spring XD Batch Job Workflow example.
 
 **Note:** 
 This example runs in Spring XD
 
-Start Spring XD:
-----------------
+#### Start Spring XD:
 
-cd $XD_HOME
-JAVA_OPTS="-XX:PermSize=256m -Xmx8g -d64" ./bin/xd-singlenode
+    cd $XD_HOME
+    JAVA_OPTS="-XX:PermSize=256m -Xmx8g -d64" ./bin/xd-singlenode
 
-Start the Spring XD shell:
---------------------------
+#### Start the Spring XD shell:
 
-cd $XD_HOME/../shell
-./bin/xd-shell
+    cd $XD_HOME/../shell
+    ./bin/xd-shell
 
-
-Build with:
------------
+#### Build with:
 
     $ mvn clean package
 
-Install from XD Shell with:
----------------------------
+#### Install from XD Shell with:
 
     xd:>module upload --type job --name batch-workflow --file <path-to-this-example>/target/batch-workflow-0.2.0.jar
 
-Run from XD Shell with:
------------------------
+#### Run from XD Shell with:
 
     xd>job create --name workflow --definition "batch-workflow" --deploy
     xd>job launch --name workflow --params {"local.file":"/Users/trisberg/SpringOne/input/hadoop-tweets_2014-09-02.txt"}
@@ -39,10 +33,6 @@ Alternatively, launch job with a stream looking for files copied to a directory:
 
     xd>stream create tweetFile --definition "file --ref=true --dir=/Users/trisberg/BigData/input --pattern='*.txt' | transform --expression='{\"local.file\":\"'+#{'payload.getAbsolutePath()'}+'\"}' > queue:job:workflow" --deploy
 
-
-module upload --type job --name batch-workflow --file /Users/trisberg/Projects/trisberg/big-data-2015/batch-workflow/target/batch-workflow-0.2.0.jar
-
-job launch --name workflow --params {"local.file":"/Users/trisberg/Projects/trisberg/big-data-2015/data/hadoop-tweets_2014-09-02.txt"}
 
 **Note:** 
 
