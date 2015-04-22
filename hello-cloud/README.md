@@ -1,5 +1,5 @@
-Simple Hadoop Web App
-=====================
+Simple Hadoop Web App for Cloud
+===============================
 
 Build using:
 
