@@ -54,14 +54,25 @@
 			<artifactId>spring-data-hadoop-boot</artifactId>
 			<version>${spring-data-hadoop.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-mapreduce-examples</artifactId>
+			<version>${hadoop.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-mapreduce-client-jobclient</artifactId>
+			<version>${hadoop.version}</version>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
  
-	<repositories>
-		<repository>
-			<id>spring-releases</id>
-			<url>http://repo.spring.io/libs-release</url>
-		</repository>
-	</repositories>
+	<!--<repositories>-->
+		<!--<repository>-->
+			<!--<id>spring-releases</id>-->
+			<!--<url>http://repo.spring.io/libs-release</url>-->
+		<!--</repository>-->
+	<!--</repositories>-->
 
 	<build>
 		<plugins>

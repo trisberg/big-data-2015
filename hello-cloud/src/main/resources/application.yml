@@ -3,16 +3,46 @@ spring:
     show_banner: true
   hadoop:
     fsUri: hdfs://localhost:8020
+    resourceManagerHost: localhost
+    jobHistoryAddress: localhost:10020
+    config:
+      mapreduce.framework.name: yarn
+mapreduce:
+  jar: file:#{systemProperties['user.dir']}/hadoop-mapreduce-examples-2.6.0.jar
+  input: /user/#{systemProperties['user.name']}/example/input
+  output: /user/#{systemProperties['user.name']}/example/output
 ---
 
 spring:
   profiles: lattice
   hadoop:
-    socks:
-      target: localhost
-      port: 9000
-    fsUri: hdfs://${spring.hadoop.socks.target}:${spring.hadoop.socks.port}
+    fsUri: hdfs://${hadoop.host}:${hadoop.fsPort}
+    resourceManagerHost: ${hadoop.host}
+    jobHistoryAddress: ${hadoop.host}:10020
     config:
+      mapreduce.framework.name: yarn
+hadoop:
+  host: localhost
+  fsPort: 8020
+---
+
+spring:
+  profiles: socks-proxy
+  hadoop:
+    fsUri: hdfs://${hadoop.host}:${hadoop.fsPort}
+    resourceManagerHost: ${hadoop.host}
+    jobHistoryAddress: ${hadoop.host}:10020
+    config:
+      mapreduce.framework.name: yarn
       hadoop.socks.server: ltchost:1099
       hadoop.rpc.socket.factory.class.default: org.apache.hadoop.net.SocksSocketFactory
+hadoop:
+  host: ltchost
+  fsPort: 9000
+---
+
+spring:
+  profiles: lattice
+mapreduce:
+  jar: file:///hadoop-mapreduce-examples-2.6.0.jar
 ---
