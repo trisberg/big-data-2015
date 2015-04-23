@@ -22,7 +22,7 @@ This demo can be run in several ways. You can run locally, in a Docker container
 
 Some common instructions for the demo:
 
-The app has 4 pages:
+The app has 5 pages:
 
 * `/` for Hello message
 * `/env` for environment
