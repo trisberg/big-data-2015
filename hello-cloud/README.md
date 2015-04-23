@@ -31,7 +31,7 @@ __Start Hadoop Docker image__
 
 __Start Spring App Docker image__
 
-first
+First
 * look up the ip address of the Hadoop Docker image (mine was 172.17.0.3) and pass that in as the hadoop_host env var below
 
 then start Docker image
@@ -57,7 +57,7 @@ __Start Hadoop Docker image__
 	
 __Start SOCKS proxy__
 
-first
+First
 * copy content of `/root/.ssh/id_rsa` from Hadoop Docker container to `~/.ssh/id_docker_rsa` on your local system
 * add `ltchost` entry to your local `/etc/hosts` and have it resolve to your local IP address
 
@@ -67,7 +67,7 @@ then start the proxy
 
 __Start lattice (use v0.2.3)__
 
-first
+First
 * look up the ip address of the Hadoop Docker image (mine was 172.17.0.3) and pass that in as the hadoop_host env var below
 
 then start lattice and app
