@@ -10,8 +10,8 @@
 	<version>0.1.0</version>
 	<packaging>jar</packaging>
 
-	<name>hello-java</name>
-	<description>Hello Hadoop Java App</description>
+	<name>hello-cloud</name>
+	<description>Hello Hadoop Java App for Cloud</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -67,12 +67,12 @@
 		</dependency>
 	</dependencies>
  
-	<!--<repositories>-->
-		<!--<repository>-->
-			<!--<id>spring-releases</id>-->
-			<!--<url>http://repo.spring.io/libs-release</url>-->
-		<!--</repository>-->
-	<!--</repositories>-->
+	<repositories>
+		<repository>
+			<id>spring-releases</id>
+			<url>http://repo.spring.io/libs-release</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>

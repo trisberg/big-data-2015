@@ -4,8 +4,8 @@ spring:
   hadoop:
     fsUri: hdfs://localhost:8020
     resourceManagerHost: localhost
-    jobHistoryAddress: localhost:10020
     config:
+      mapreduce.jobhistory.address: localhost:10020
       mapreduce.framework.name: yarn
 mapreduce:
   jar: file:#{systemProperties['user.dir']}/hadoop-mapreduce-examples-2.6.0.jar
@@ -18,8 +18,8 @@ spring:
   hadoop:
     fsUri: hdfs://${hadoop.host}:${hadoop.fsPort}
     resourceManagerHost: ${hadoop.host}
-    jobHistoryAddress: ${hadoop.host}:10020
     config:
+      mapreduce.jobhistory.address: ${hadoop.host}:10020
       mapreduce.framework.name: yarn
 hadoop:
   host: localhost
@@ -31,8 +31,8 @@ spring:
   hadoop:
     fsUri: hdfs://${hadoop.host}:${hadoop.fsPort}
     resourceManagerHost: ${hadoop.host}
-    jobHistoryAddress: ${hadoop.host}:10020
     config:
+      mapreduce.jobhistory.address: ${hadoop.host}:10020
       mapreduce.framework.name: yarn
 hadoop:
   host: localhost
