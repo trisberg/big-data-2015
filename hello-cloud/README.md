@@ -36,7 +36,7 @@ Start Spring App Docker image
 
     docker run -p 8080 -e spring_profiles_active=docker -e hadoop_host=172.17.0.3 hello-cloud
 
-#### Using Lattice with Hadoop local or in a VM
+#### Using Lattice with Hadoop in a VM
 
 Start hadoop VM  -- see: https://github.com/trisberg/big-data-2015/blob/master/InstallingHadoop.asciidoc
 
@@ -55,18 +55,21 @@ Start Hadoop Docker image
 	
 Start SOCKS proxy
 
+first
 * copy /root/.ssh/id_rsa from Hadoop Docker container to ~/.ssh/id_docker_rsa on your host system
 * add ltchost entry to your local /etc/hosts and have it resolve to your local IP address
-* start the proxy
 
+the start the proxy
 
     ssh -i ~/.ssh/id_docker_rsa root@$(boot2docker ip) -p 2122 -D ltchost:1099
 
 Start lattice (use v0.2.3)
 
+first
 * look up the ip address of the Hadoop Docker image (mine was 172.17.0.3) and pass that in as the hadoop_host env var below
 
+then start lattice and app
 
     vagrant up
     ltc create hello-cloud trisberg/hello-cloud --memory-mb=0 --timeout '4m0s' --env spring_profiles_active=socks-proxy --env hadoop_host=172.17.0.3    
-    
+
