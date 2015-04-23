@@ -27,7 +27,7 @@ For Lattice install see: https://github.com/cloudfoundry-incubator/lattice
 __Start Hadoop Docker image__
 
     $(boot2docker shellinit)
-	docker run -i -t sequenceiq/hadoop-docker:2.6.0 /etc/bootstrap.sh -bash
+    docker run -i -t sequenceiq/hadoop-docker:2.6.0 /etc/bootstrap.sh -bash
 
 __Start Spring App Docker image__
 
@@ -58,8 +58,8 @@ __Start Hadoop Docker image__
 __Start SOCKS proxy__
 
 first
-* copy /root/.ssh/id_rsa from Hadoop Docker container to ~/.ssh/id_docker_rsa on your host system
-* add ltchost entry to your local /etc/hosts and have it resolve to your local IP address
+* copy content of `/root/.ssh/id_rsa` from Hadoop Docker container to `~/.ssh/id_docker_rsa` on your local system
+* add `ltchost` entry to your local `/etc/hosts` and have it resolve to your local IP address
 
 then start the proxy
 
