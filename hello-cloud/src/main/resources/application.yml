@@ -27,22 +27,37 @@ hadoop:
 ---
 
 spring:
-  profiles: socks-proxy
+  profiles: docker
   hadoop:
     fsUri: hdfs://${hadoop.host}:${hadoop.fsPort}
     resourceManagerHost: ${hadoop.host}
     jobHistoryAddress: ${hadoop.host}:10020
     config:
       mapreduce.framework.name: yarn
+hadoop:
+  host: localhost
+  fsPort: 9000
+---
+
+spring:
+  profiles: socks-proxy
+  hadoop:
+    fsUri: hdfs://${hadoop.host}:${hadoop.fsPort}
+    resourceManagerHost: ${hadoop.host}
+    jobHistoryAddress: ${hadoop.host}:10020
+    config:
+      mapreduce.jobhistory.address: ${hadoop.host}:10020
+      mapreduce.framework.name: local
       hadoop.socks.server: ltchost:1099
       hadoop.rpc.socket.factory.class.default: org.apache.hadoop.net.SocksSocketFactory
+      dfs.client.use.legacy.blockreader: true
 hadoop:
   host: ltchost
   fsPort: 9000
 ---
 
 spring:
-  profiles: lattice
+  profiles: lattice,socks-proxy,docker
 mapreduce:
   jar: file:///hadoop-mapreduce-examples-2.6.0.jar
 ---

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
 import org.springframework.data.hadoop.fs.FsShell;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,27 +22,30 @@ import java.io.InputStreamReader;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @SpringBootApplication
 @Controller
-public class HdfsApp {
+public class HdfsApp implements EnvironmentAware {
 
 	@Value("${mapreduce.input}")
-	String inputDir;
+	private String inputDir;
 
 	@Value("${mapreduce.output}")
-	String outputDir;
+	private String outputDir;
 
 	@Autowired
-	Configuration configuration;
+	private Configuration configuration;
 
 	@Autowired
-	FsShell fsShell;
+	private FsShell fsShell;
 
 	@Autowired
-	Job job;
+	private Job job;
+
+	private String profile;
 
 	public static void main(String[] args) {
 		SpringApplication.run(HdfsApp.class, args);
@@ -54,6 +59,7 @@ public class HdfsApp {
 
     @RequestMapping("/env")
 	public String env(Model model) {
+	    model.addAttribute("profile", profile);
 		List envVars = new ArrayList();
 		Map<String, String> env = System.getenv();
 		for (Map.Entry<String, String> entry : env.entrySet()) {
@@ -137,4 +143,7 @@ public class HdfsApp {
 		}
 	}
 
+	public void setEnvironment(Environment environment) {
+		this.profile = Arrays.asList(environment.getActiveProfiles()).toString();
+	}
 }
