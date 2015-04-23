@@ -20,7 +20,7 @@ Build Docker image (you need boot2docker running and to have a Docker Hub accoun
 
 This demo can be run in several ways. You can run locally, in a Docker container or deployed to Lattice. See below for instructions how to run the app.
 
-Some common instruction for the demo:
+Some common instructions for the demo:
 
 The app has 4 pages:
 
