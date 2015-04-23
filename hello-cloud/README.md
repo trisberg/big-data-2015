@@ -54,9 +54,9 @@ Prepare example text on the Hadoop system:
 
 ### Running the Docker image:
 
-For Docker install see: https://docs.docker.com/installation/
+We are using boot2docker and Docker version 1.5.0. For Docker install see: https://docs.docker.com/installation/
 
-For Lattice install see: https://github.com/cloudfoundry-incubator/lattice
+We are using Lattice version v0.2.3. For Lattice install see: https://github.com/cloudfoundry-incubator/lattice
 
 #### Using Docker and Hadoop running in another Docker image
 
@@ -78,7 +78,7 @@ then start Docker image
 
 __Start hadoop VM__  -- see: https://github.com/trisberg/big-data-2015/blob/master/InstallingHadoop.asciidoc
 
-__Start lattice (use v0.2.3)__
+__Start lattice__
 
     vagrant up
     ltc create hello-cloud trisberg/hello-cloud --memory-mb=0 --timeout '4m0s' --env spring_profiles_active=lattice --env hadoop_host=borneo
@@ -101,7 +101,7 @@ then start the proxy
 
     ssh -i ~/.ssh/id_docker_rsa root@$(boot2docker ip) -p 2122 -D ltchost:1099
 
-__Start lattice (use v0.2.3)__
+__Start lattice__
 
 First
 * look up the ip address of the Hadoop Docker image (mine was 172.17.0.3) and pass that in as the hadoop_host env var below
