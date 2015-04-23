@@ -24,10 +24,10 @@ Some common instruction for the demo:
 
 The app has 4 pages:
 
-* / for Hello message
-* /env for environment
-* /ip for IP address
-* /wc for word count MapReduce example
+* `/` for Hello message
+* `/env` for environment
+* `/ip` for IP address
+* `/wc` for word count MapReduce example
 
 Before you run the word count demo you need to do the following:
 
