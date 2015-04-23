@@ -24,23 +24,25 @@ For Lattice install see: https://github.com/cloudfoundry-incubator/lattice
 
 #### Using Docker and Hadoop running in another Docker image
 
-Start Hadoop Docker image
+__Start Hadoop Docker image__
 
     $(boot2docker shellinit)
 	docker run -i -t sequenceiq/hadoop-docker:2.6.0 /etc/bootstrap.sh -bash
 
-Start Spring App Docker image
+__Start Spring App Docker image__
 
+first
 * look up the ip address of the Hadoop Docker image (mine was 172.17.0.3) and pass that in as the hadoop_host env var below
 
+then start Docker image
 
     docker run -p 8080 -e spring_profiles_active=docker -e hadoop_host=172.17.0.3 hello-cloud
 
 #### Using Lattice with Hadoop in a VM
 
-Start hadoop VM  -- see: https://github.com/trisberg/big-data-2015/blob/master/InstallingHadoop.asciidoc
+__Start hadoop VM__  -- see: https://github.com/trisberg/big-data-2015/blob/master/InstallingHadoop.asciidoc
 
-Start lattice (use v0.2.3)
+__Start lattice (use v0.2.3)__
 
     vagrant up
     ltc create hello-cloud trisberg/hello-cloud --memory-mb=0 --timeout '4m0s' --env spring_profiles_active=lattice --env hadoop_host=borneo
@@ -48,22 +50,22 @@ Start lattice (use v0.2.3)
 
 #### Using Lattice with Hadoop running in a Docker image using SOCKS proxy
 
-Start Hadoop Docker image
+__Start Hadoop Docker image__
 
     $(boot2docker shellinit)
 	docker run -i -p 2122:2122 -t sequenceiq/hadoop-docker:2.6.0 /etc/bootstrap.sh -bash
 	
-Start SOCKS proxy
+__Start SOCKS proxy__
 
 first
 * copy /root/.ssh/id_rsa from Hadoop Docker container to ~/.ssh/id_docker_rsa on your host system
 * add ltchost entry to your local /etc/hosts and have it resolve to your local IP address
 
-the start the proxy
+then start the proxy
 
     ssh -i ~/.ssh/id_docker_rsa root@$(boot2docker ip) -p 2122 -D ltchost:1099
 
-Start lattice (use v0.2.3)
+__Start lattice (use v0.2.3)__
 
 first
 * look up the ip address of the Hadoop Docker image (mine was 172.17.0.3) and pass that in as the hadoop_host env var below
