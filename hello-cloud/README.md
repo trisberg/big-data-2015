@@ -16,6 +16,36 @@ Build Docker image (you need boot2docker running and to have a Docker Hub accoun
     docker tag -f hello-cloud $USER/hello-cloud
     docker push $USER/hello-cloud
 
+### Demo instructions:
+
+This demo can be run in several ways. You can run locally, in a Docker container or deployed to Lattice. See below for instructionshow to run the app.
+
+Some common instruction for the demo:
+
+The app has 4 pages:
+
+* / for Hello message
+* /env for environment
+* /ip for IP address
+* /wc for word count MapReduce example
+
+Before you run the word count demo you need to do the following:
+
+Create directories in HDFS on the Hadoop system:
+
+    hadoop fs -mkdir /tmp
+    hadoop fs -chmod 1777 /tmp
+    hadoop fs -mkdir -p /tmp/hadoop-yarn/staging/history
+    hadoop fs -chmod -R 777 /tmp/hadoop-yarn
+
+Prepare example text on the Hadoop system:
+
+    export APP_USER=vcap  (use vcap for lattice, root for docker, $USER for local)
+    hadoop fs -mkdir -p /user/$APP_USER/example/input
+    vi sample.txt  (add some text)
+    hadoop fs -put sample.txt /user/$APP_USER/example/input/sample.txt
+    hadoop fs -chown -R $APP_USER /user/$APP_USER
+
 ### Running the Docker image:
 
 For Docker install see: https://docs.docker.com/installation/
