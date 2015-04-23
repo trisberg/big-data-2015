@@ -31,7 +31,7 @@ The app has 4 pages:
 
 Before you run the word count demo you need to do the following:
 
-If you are using the SequenceIQ hadoop Docker image you need to start the Job History server and also set the path for the `hadoop` command.
+If you are using the SequenceIQ hadoop Docker image you need to start the Job History server and also set the path for the `hadoop` command. Enterthe following after the Docker container starts:
 
     export PATH=$PATH:/usr/local/hadoop/bin
     /usr/local/hadoop/sbin/mr-jobhistory-daemon.sh start historyserver
