@@ -260,13 +260,13 @@ We also need to add your JAVA_HOME to the file `etc/hadoop/hadoop-env.sh`. Look 
 export JAVA_HOME=${JAVA_HOME}
 ----
 
-Replace that `${JAVA_HOME}` with your actual JAVA_HOME directory like: `/usr/lib/jvm/java-1.7.0-openjdk`.
+Replace that `${JAVA_HOME}` with your actual JAVA_HOME directory like: `/usr/lib/jvm/java-1.7.0-openjdk.x86_64`.
 
 Now we are ready to setup our environment, there are a handful of environment variables to set.
 
 [source,bash]
 ----
-export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk
+export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk.x86_64
 export HADOOP_PREFIX=~/hadoop-2.6.0
 export HADOOP_CONF_DIR=$HADOOP_PREFIX/etc/hadoop
 export YARN_CONF_DIR=$HADOOP_CONF_DIR
