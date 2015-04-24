@@ -9,4 +9,9 @@ buildNumber.properties
 *.iml
 *.ipr
 *.iws
+*.classpath
+*.project
+*.eclipse.core.resources.prefs
+*.eclipse.jdt.core.prefs
+*.eclipse.m2e.core.prefs
 .DS_Store
