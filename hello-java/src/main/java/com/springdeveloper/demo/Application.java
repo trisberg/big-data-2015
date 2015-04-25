@@ -14,7 +14,7 @@ import org.springframework.data.hadoop.fs.FsShell;
 public class Application implements CommandLineRunner {
 
     @Autowired
-    FsShell fsShell;
+    private FsShell fsShell;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

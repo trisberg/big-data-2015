@@ -27,7 +27,7 @@ This example runs in Spring XD
 #### Run from XD Shell with:
 
     xd>job create --name workflow --definition "batch-workflow" --deploy
-    xd>job launch --name workflow --params {"local.file":"/Users/trisberg/SpringOne/input/hadoop-tweets_2014-09-02.txt"}
+    xd>job launch --name workflow --params {"local.file":"/Users/trisberg/BigData/input/hadoop-tweets_2014-09-02.txt"}
 
 Alternatively, launch job with a stream looking for files copied to a directory:
 

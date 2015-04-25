@@ -22,9 +22,7 @@
 		mapreduce.jobhistory.address=${spring.hadoop.resourceManagerHost}:10020
 	</hadoop:configuration>
 	
-	<!--
-	  required to access #{jobParameters['...']}
-	-->
+	<!-- required to access #{jobParameters['...']} -->
 	<bean class="org.springframework.batch.core.scope.StepScope">
 		<property name="proxyTargetClass" value="true"/>
 	</bean>
@@ -39,7 +37,7 @@
 	<batch:job id="job">
 
  		<batch:step id="import" next="initHive">
-			<batch:tasklet ref="scriptTasklet"/>
+			<batch:tasklet ref="importScriptTasklet"/>
 		</batch:step>
 
  		<batch:step id="initHive" next="calculate">
@@ -59,13 +57,11 @@
 			</batch:flow>
 		</batch:split>	
 
-		<batch:step id="export" parent="export-step"/>
+		<batch:step id="export" parent="exportStep"/>
 
 	</batch:job>
 
-	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor"/>
-
-	<hadoop:script-tasklet id="scriptTasklet" scope="step">
+	<hadoop:script-tasklet id="importScriptTasklet" scope="step">
 		<hadoop:script location="classpath:file-prep.groovy">
 			<hadoop:property name="localFile" value="#{jobParameters['local.file']}"/>
 			<hadoop:property name="inputDir" value="#{stepExpr['inputPath']+stepExpr['tweetDate']}"/>
@@ -99,13 +95,50 @@
 			from 
 			  (select distinct 
 			    get_json_object(t.value, '$.user.screen_name') as username, 
-			    cast(get_json_object(t.value, '$.user.followers_count') as int) as followers 
+			    cast(get_json_object(t.value, '$.user.followers_count') as int) as followers
 			    from tweetdata t
 			  ) tweets 
 			order by tweets.followers desc limit 10
 			</value>
 		</property>
 	</bean>
+
+	<batch:step id="exportStep">
+		<batch:tasklet>
+			<batch:chunk reader="hdfsReader" writer="jdbcWriter" commit-interval="10" skip-limit="100">
+				<batch:skippable-exception-classes>
+					<batch:include class="org.springframework.batch.item.file.FlatFileParseException" />
+				</batch:skippable-exception-classes>
+			</batch:chunk>
+		</batch:tasklet>
+	</batch:step>
+
+	<!-- readers, writers and mappers -->
+
+	<bean id="hdfsReader" class="org.springframework.batch.item.file.MultiResourceItemReader" scope="step">
+		<property name="resources" 
+			value="#{ @hdfsResourceLoader.getResources(stepExpr['hivePath'] + '/influencers/*') }"/>
+		<property name="delegate" ref="flatFileItemReader"/>
+	</bean>
+	<bean id="flatFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+		<property name="lineMapper" ref="hiveDataMapper"/>
+	</bean>
+
+	<bean id="hiveDataMapper" class="com.springdeveloper.hadoop.batch.hive.HiveDataMapper" scope="step">
+		<property name="tweetDate" value="#{stepExpr['tweetDate']}"/>
+	</bean>
+
+	<bean id="jdbcWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+ 		<property name="sql"
+	              value="INSERT INTO twitter_influencers (user_name, followers, tweet_date) VALUES (:user_name, :followers, :tweet_date)"/>
+		<property name="dataSource" ref="exportDataSource"/>
+	</bean>
+
+	<!-- infrastructure beans -->
+
+	<hadoop:resource-loader id="hdfsResourceLoader"/>
+
+	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor"/>
 
 	<bean id="hiveDataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 		<property name="driverClass" value="${hive.driverClassName}"/>
@@ -123,33 +156,5 @@
 	<jdbc:initialize-database data-source="exportDataSource">
 		<jdbc:script location="classpath:hsql-schema.sql"/>
 	</jdbc:initialize-database>
-
-	<batch:step id="export-step">
-		<batch:tasklet>
-			<batch:chunk reader="hdfsReader" writer="jdbcWriter" commit-interval="10" skip-limit="100">
-				<batch:skippable-exception-classes>
-					<batch:include class="org.springframework.batch.item.file.FlatFileParseException" />
-				</batch:skippable-exception-classes>
-			</batch:chunk>
-		</batch:tasklet>
-	</batch:step>
-
- 	<hadoop:resource-loader id="hdfsResourceLoader"/>
- 
-	<bean id="hdfsReader" class="org.springframework.batch.item.file.MultiResourceItemReader" scope="step">
-		<property name="resources" 
-			value="#{ @hdfsResourceLoader.getResources(stepExpr['hivePath'] + '/influencers/*') }"/>
-		<property name="delegate" ref="flatFileItemReader"/>
-	</bean>
-	<bean id="flatFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
-		<property name="lineMapper">
-			<bean class="com.springdeveloper.hadoop.batch.hive.HiveDataMapper"/>
-		</property>
-	</bean>
-
-	<bean id="jdbcWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
- 		<property name="sql" value="INSERT INTO twitter_influencers (user_name, followers) VALUES (:user_name, :followers)"/>
-		<property name="dataSource" ref="exportDataSource"/>
-	</bean>
 
 </beans>
