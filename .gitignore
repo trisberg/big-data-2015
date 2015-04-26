@@ -11,7 +11,5 @@ buildNumber.properties
 *.iws
 *.classpath
 *.project
-*.eclipse.core.resources.prefs
-*.eclipse.jdt.core.prefs
-*.eclipse.m2e.core.prefs
+.settings
 .DS_Store

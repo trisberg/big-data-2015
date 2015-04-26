@@ -27,7 +27,7 @@
 		<property name="proxyTargetClass" value="true"/>
 	</bean>
 
-	<util:map id="stepExpr" map-class="java.util.HashMap" scope="step">
+	<util:map id="jobExpr" map-class="java.util.HashMap" scope="step">
 		<entry key="inputPath" value="#{jobParameters['input.path']?:'/tweets/input/'}"/>
 		<entry key="tweetDate" value="#{(jobParameters['local.file'].split('_')[1]).substring(0,10)}"/>
 		<entry key="outputPath" value="#{jobParameters['output.path']?:'/tweets/output'}"/>
@@ -64,23 +64,23 @@
 	<hadoop:script-tasklet id="importScriptTasklet" scope="step">
 		<hadoop:script location="classpath:file-prep.groovy">
 			<hadoop:property name="localFile" value="#{jobParameters['local.file']}"/>
-			<hadoop:property name="inputDir" value="#{stepExpr['inputPath']+stepExpr['tweetDate']}"/>
-			<hadoop:property name="outputDir" value="#{stepExpr['outputPath']}"/>
-			<hadoop:property name="hiveDir" value="#{stepExpr['hivePath']}"/>
+			<hadoop:property name="inputDir" value="#{jobExpr['inputPath']+jobExpr['tweetDate']}"/>
+			<hadoop:property name="outputDir" value="#{jobExpr['outputPath']}"/>
+			<hadoop:property name="hiveDir" value="#{jobExpr['hivePath']}"/>
 		</hadoop:script>
 	</hadoop:script-tasklet>
 
 	<bean id="hiveInitializerTasklet" class="com.springdeveloper.hadoop.batch.hive.HiveInitializerTasklet" scope="step">
 		<property name="dataSource" ref="hiveDataSource"/>
 		<property name="hiveTableName" value="tweetdata"/>
-		<property name="dataPath" value="#{stepExpr['inputPath']+stepExpr['tweetDate']}"/>
+		<property name="dataPath" value="#{jobExpr['inputPath']+jobExpr['tweetDate']}"/>
 	</bean>
 
 	<hadoop:job-tasklet id="hashtagcountTasklet" job-ref="hashtagcountJob"/>
 
 	<hadoop:job id="hashtagcountJob"
-		input-path="#{stepExpr['inputPath']+stepExpr['tweetDate']}"
-		output-path="#{stepExpr['outputPath']}/hashtags"
+		input-path="#{jobExpr['inputPath']+jobExpr['tweetDate']}"
+		output-path="#{jobExpr['outputPath']}/hashtags"
 		jar="${xd.customModule.home}/job/${xd.module.name}.jar"
 		mapper="com.springdeveloper.hadoop.TweetCountMapper"
 		reducer="com.springdeveloper.hadoop.IntSumReducer"
@@ -90,7 +90,7 @@
 		<property name="dataSource" ref="hiveDataSource"/>
 		<property name="sql">
 			<value>
-			insert overwrite directory '#{stepExpr['hivePath']}/influencers'
+			insert overwrite directory '#{jobExpr['hivePath']}/influencers'
 			select tweets.username, tweets.followers
 			from 
 			  (select distinct 
@@ -117,7 +117,7 @@
 
 	<bean id="hdfsReader" class="org.springframework.batch.item.file.MultiResourceItemReader" scope="step">
 		<property name="resources" 
-			value="#{ @hdfsResourceLoader.getResources(stepExpr['hivePath'] + '/influencers/*') }"/>
+			value="#{ @hdfsResourceLoader.getResources(jobExpr['hivePath'] + '/influencers/*') }"/>
 		<property name="delegate" ref="flatFileItemReader"/>
 	</bean>
 	<bean id="flatFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
@@ -125,7 +125,7 @@
 	</bean>
 
 	<bean id="hiveDataMapper" class="com.springdeveloper.hadoop.batch.hive.HiveDataMapper" scope="step">
-		<property name="tweetDate" value="#{stepExpr['tweetDate']}"/>
+		<property name="tweetDate" value="#{jobExpr['tweetDate']}"/>
 	</bean>
 
 	<bean id="jdbcWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
