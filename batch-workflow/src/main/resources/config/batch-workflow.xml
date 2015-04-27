@@ -13,27 +13,20 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
 
-	<context:property-placeholder location="classpath:hive-jdbc.properties"/>
-
-	<hadoop:configuration>
-		fs.defaultFS=${spring.hadoop.fsUri}
-		yarn.resourcemanager.hostname=${spring.hadoop.resourceManagerHost}
-		mapreduce.framework.name=yarn
-		mapreduce.jobhistory.address=${spring.hadoop.resourceManagerHost}:10020
-	</hadoop:configuration>
-	
 	<!-- required to access #{jobParameters['...']} -->
 	<bean class="org.springframework.batch.core.scope.StepScope">
 		<property name="proxyTargetClass" value="true"/>
 	</bean>
 
+	<!-- common expressions and defaults used for the jobParameters -->
 	<util:map id="jobExpr" map-class="java.util.HashMap" scope="step">
 		<entry key="inputPath" value="#{jobParameters['input.path']?:'/tweets/input/'}"/>
-		<entry key="tweetDate" value="#{(jobParameters['local.file'].split('_')[1]).substring(0,10)}"/>
 		<entry key="outputPath" value="#{jobParameters['output.path']?:'/tweets/output'}"/>
 		<entry key="hivePath" value="#{jobParameters['hive.path']?:'/tweets/hive'}"/>
+		<entry key="tweetDate" value="#{(jobParameters['local.file'].split('_')[1]).substring(0,10)}"/>
 	</util:map>
 
+	<!-- the job definition -->
 	<batch:job id="job">
 
  		<batch:step id="import" next="initHive">
@@ -61,6 +54,7 @@
 
 	</batch:job>
 
+	<!-- step and tasklet definitions -->
 	<hadoop:script-tasklet id="importScriptTasklet" scope="step">
 		<hadoop:script location="classpath:file-prep.groovy">
 			<hadoop:property name="localFile" value="#{jobParameters['local.file']}"/>
@@ -136,10 +130,18 @@
 
 	<!-- infrastructure beans -->
 
+	<hadoop:configuration>
+		fs.defaultFS=${spring.hadoop.fsUri}
+		yarn.resourcemanager.hostname=${spring.hadoop.resourceManagerHost}
+		mapreduce.framework.name=yarn
+		mapreduce.jobhistory.address=${spring.hadoop.resourceManagerHost}:10020
+	</hadoop:configuration>
+	
 	<hadoop:resource-loader id="hdfsResourceLoader"/>
 
 	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor"/>
 
+	<context:property-placeholder location="classpath:hive-jdbc.properties"/>
 	<bean id="hiveDataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 		<property name="driverClass" value="${hive.driverClassName}"/>
 		<property name="url" value="${hive.url}"/>
